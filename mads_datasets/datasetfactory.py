@@ -393,7 +393,7 @@ class DatasetFactoryProvider:
             )
         if dataset_type == DatasetType.IMDB:
             preprocessor = kwargs.get("preprocessor", IMDBTokenizer)
-            return IMDBDatasetFactory(imdbdatasetsettings, **kwargs)
+            return IMDBDatasetFactory(imdbdatasetsettings, preprocessor=preprocessor, **kwargs)
         if dataset_type == DatasetType.GESTURES:
             preprocessor = kwargs.get("preprocessor", PaddedPreprocessor)
             return GesturesDatasetFactory(
