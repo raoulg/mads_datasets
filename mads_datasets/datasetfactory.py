@@ -69,13 +69,11 @@ T = TypeVar("T", bound=DatasetSettings)
 
 class AbstractDatasetFactory(ABC, Generic[T]):
     def __init__(
-        self, settings: T, preprocessor: Type[PreprocessorProtocol], **kwargs: Any
+        self, settings: T, preprocessor: Type[PreprocessorProtocol], datadir: Path
     ) -> None:
         self._settings = settings
-        self.data_dir = Path(
-            kwargs.get("datadir", Path.home() / ".cache/mads_datasets")
-        )
         self.preprocessor = preprocessor
+        self.datadir = datadir
 
     @property
     def settings(self) -> T:
@@ -84,8 +82,7 @@ class AbstractDatasetFactory(ABC, Generic[T]):
     def download_data(self) -> None:
         url = self._settings.dataset_url
         filename = self._settings.filename
-        datadir = self.data_dir
-        self.subfolder = Path(datadir) / self.settings.name
+        self.subfolder = Path(self.datadir) / self.settings.name
         if not self.subfolder.exists():
             logger.info("Start download...")
             self.subfolder.mkdir(parents=True)
@@ -386,30 +383,33 @@ class IMDBTokenizer(BaseTokenizer):
 class DatasetFactoryProvider:
     @staticmethod
     def create_factory(dataset_type: DatasetType, **kwargs) -> AbstractDatasetFactory:
+        datadir = Path(
+            kwargs.get("datadir", Path.home() / ".cache/mads_datasets")
+        )
         if dataset_type == DatasetType.FLOWERS:
             preprocessor = kwargs.get("preprocessor", BasePreprocessor)
             return FlowersDatasetFactory(
-                flowersdatasetsettings, preprocessor=preprocessor, **kwargs
+                flowersdatasetsettings, preprocessor=preprocessor, datadir=datadir
             )
         if dataset_type == DatasetType.IMDB:
             preprocessor = kwargs.get("preprocessor", IMDBTokenizer)
             return IMDBDatasetFactory(
-                imdbdatasetsettings, preprocessor=preprocessor, **kwargs
+                imdbdatasetsettings, preprocessor=preprocessor, datadir=datadir
             )
         if dataset_type == DatasetType.GESTURES:
             preprocessor = kwargs.get("preprocessor", PaddedPreprocessor)
             return GesturesDatasetFactory(
-                gesturesdatasetsettings, preprocessor=preprocessor, **kwargs
+                gesturesdatasetsettings, preprocessor=preprocessor, datadir=datadir
             )
         if dataset_type == DatasetType.FASHION:
             preprocessor = kwargs.get("preprocessor", BasePreprocessor)
             return FashionDatasetFactory(
-                fashionmnistsettings, preprocessor=preprocessor, **kwargs
+                fashionmnistsettings, preprocessor=preprocessor, datadir=datadir
             )
         if dataset_type == DatasetType.SUNSPOTS:
             preprocessor = kwargs.get("preprocessor", BasePreprocessor)
             return SunspotsDatasetFactory(
-                sunspotsettings, preprocessor=preprocessor, **kwargs
+                sunspotsettings, preprocessor=preprocessor, datadir=datadir
             )
 
         raise ValueError(f"Invalid dataset type: {dataset_type}")
