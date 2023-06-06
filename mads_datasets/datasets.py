@@ -132,7 +132,8 @@ class ImgDataset(AbstractDataset):
     def process_data(self) -> None:
         for file in self.paths:
             img = self.load_image(file, self.img_size)
-            x = np.reshape(img, (1,) + img.shape)
+            x_ = np.reshape(img, (1,) + img.shape)
+            x = torch.tensor(x_ / 255.0).type(torch.float32)
             y = self.class_names.index(file.parent.name)
             self.dataset.append((x, y))
 

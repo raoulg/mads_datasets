@@ -306,7 +306,7 @@ class PreprocessorProtocol(Protocol):
 class BasePreprocessor(PreprocessorProtocol):
     def __call__(self, batch: List[Tuple]) -> Tuple[torch.Tensor, torch.Tensor]:
         X, y = zip(*batch)
-        return torch.stack(X), torch.stack(y)
+        return torch.stack(X), torch.tensor(y)
 
 
 class PaddedPreprocessor(PreprocessorProtocol):
@@ -393,7 +393,9 @@ class DatasetFactoryProvider:
             )
         if dataset_type == DatasetType.IMDB:
             preprocessor = kwargs.get("preprocessor", IMDBTokenizer)
-            return IMDBDatasetFactory(imdbdatasetsettings, preprocessor=preprocessor, **kwargs)
+            return IMDBDatasetFactory(
+                imdbdatasetsettings, preprocessor=preprocessor, **kwargs
+            )
         if dataset_type == DatasetType.GESTURES:
             preprocessor = kwargs.get("preprocessor", PaddedPreprocessor)
             return GesturesDatasetFactory(
