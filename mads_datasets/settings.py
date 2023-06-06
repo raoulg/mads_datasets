@@ -1,10 +1,10 @@
+import re
+import string
 from enum import Enum
 from pathlib import Path
 from typing import Callable, List, Optional, Tuple, cast
 
 from pydantic import BaseModel, HttpUrl
-
-from mads_datasets import tokenizer
 
 
 class FileTypes(Enum):
@@ -95,6 +95,22 @@ gesturesdatasetsettings = DatasetSettings(
     digest="7966323b95154f314e831c312e5cc33b",
 )
 
+
+def clean(text: str) -> str:
+    punctuation = f"[{string.punctuation}]"
+    # remove CaPiTaLs
+    lowercase = text.lower()
+    # change don't and isn't into dont and isnt
+    neg = re.sub("\\'", "", lowercase)
+    # swap html tags for spaces
+    html = re.sub("<br />", " ", neg)
+    # swap punctuation for spaces
+    stripped = re.sub(punctuation, " ", html)
+    # remove extra spaces
+    spaces = re.sub("  +", " ", stripped)
+    return spaces
+
+
 imdbdatasetsettings = TextDatasetSettings(
     dataset_url=cast(
         HttpUrl, "https://ai.stanford.edu/~amaas/data/sentiment/aclImdb_v1.tar.gz"
@@ -104,7 +120,7 @@ imdbdatasetsettings = TextDatasetSettings(
     formats=[FileTypes.TXT],
     maxvocab=10000,
     maxtokens=100,
-    clean_fn=tokenizer.clean,
+    clean_fn=clean,
     digest="7c2ac02c03563afcf9b574c7e56c153a",
 )
 
