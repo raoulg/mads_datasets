@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mads-datasets"
-version = "0.1.4"
+version = "0.1.5"
 description = "Datasets for the master applied data science"
 authors = ["Raoul Grouls <Raoul.Grouls@han.nl>"]
 license = "MIT"
