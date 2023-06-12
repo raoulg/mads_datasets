@@ -1,11 +1,14 @@
 [tool.poetry]
 name = "mads-datasets"
-version = "0.1.5"
+version = "0.1.5.1"
 description = "Datasets for the master applied data science"
 authors = ["Raoul Grouls <Raoul.Grouls@han.nl>"]
 license = "MIT"
 readme = "README.md"
 packages = [{include = "mads_datasets"}]
+
+[tool.poetry.urls]
+GitHub = "https://github.com/raoulg/mads_datasets"
 
 [tool.poetry.dependencies]
 python = "^3.9"
