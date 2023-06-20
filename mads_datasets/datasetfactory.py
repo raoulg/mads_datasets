@@ -54,6 +54,7 @@ from mads_datasets.settings import (
     gesturesdatasetsettings,
     imdbdatasetsettings,
     sunspotsettings,
+    irissettings
 )
 
 Tensor = torch.Tensor
@@ -96,6 +97,7 @@ class AbstractDatasetFactory(ABC, Generic[T]):
             if digest != self.settings.digest:
                 raise ValueError(
                     f"Digest of downloaded file {self.filepath} does not match expected digest"
+                    f"\nExpected: {self.settings.digest}\nGot: {digest}"
                 )
             else:
                 logger.info(
@@ -134,6 +136,10 @@ class AbstractDatasetFactory(ABC, Generic[T]):
             validdataset, batchsize=batchsize, preprocessor=preprocessor
         )
         return {"train": trainstreamer, "valid": validstreamer}
+
+class IrisDatasetFactory(AbstractDatasetFactory[DatasetSettings]):
+    def create_dataset(self, *args: Any, **kwargs: Any) -> Mapping[str, DatasetProtocol]:
+        pass
 
 
 class SunspotsDatasetFactory(AbstractDatasetFactory[WindowedDatasetSettings]):
@@ -411,6 +417,8 @@ class DatasetFactoryProvider:
             return SunspotsDatasetFactory(
                 sunspotsettings, preprocessor=preprocessor, datadir=datadir
             )
+        if dataset_type == DatasetType.IRIS:
+            return IrisDatasetFactory(irissettings, preprocessor=None, datadir=datadir)
 
         raise ValueError(f"Invalid dataset type: {dataset_type}")
 

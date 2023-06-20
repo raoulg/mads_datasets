@@ -16,6 +16,7 @@ class FileTypes(Enum):
     TAR = ".tar.gz"
     GZ = ".gz"
     PT = ".pt"
+    CSV = ".csv"
 
 
 class ReportTypes(Enum):
@@ -31,6 +32,7 @@ class DatasetType(Enum):
     GESTURES = 3
     FASHION = 4
     SUNSPOTS = 5
+    IRIS = 6
 
 
 class BaseSettings(BaseModel):
@@ -64,6 +66,13 @@ class WindowedDatasetSettings(DatasetSettings):
     horizon: int
     window_size: int
 
+irissettings = DatasetSettings(
+    dataset_url=cast(HttpUrl, "https://github.com/raoulg/data_assets/raw/main/iris_dirty.csv"),
+    filename=Path("iris.csv"),
+    name="iris",
+    formats=[FileTypes.CSV],
+    digest="3679279dc61f6fdd859be9888db27f75"
+)
 
 sunspotsettings = WindowedDatasetSettings(
     dataset_url=cast(HttpUrl, "https://www.sidc.be/SILSO/DATA/SN_m_tot_V2.0.txt"),
