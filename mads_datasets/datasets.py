@@ -1,7 +1,7 @@
 import random
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import List, Protocol, Tuple
+from typing import TYPE_CHECKING, List, Protocol, Tuple
 
 import numpy as np
 import torch
@@ -9,6 +9,9 @@ from PIL import Image
 from tqdm import tqdm
 
 Tensor = torch.Tensor
+
+if TYPE_CHECKING:
+    import pandas as pd
 
 
 class DatasetProtocol(Protocol):
@@ -44,6 +47,28 @@ class AbstractDataset(ABC, ProcessingDatasetProtocol):
     @abstractmethod
     def process_data(self) -> None:
         raise NotImplementedError
+
+
+class PdDataset(DatasetProtocol):
+    def __init__(
+        self,
+        df: "pd.DataFrame",  # noqa: F821 type: ignore
+        target: str,
+        features: List[str],  # noqa: F821 type: ignore
+    ) -> None:  # noqa: F821
+        self.df = df
+        self.target = target
+        self.features = features
+
+    def __len__(self) -> int:
+        return len(self.df)
+
+    def __getitem__(
+        self, idx: int
+    ) -> Tuple["pd.Series", "pd.Series"]:  # noqa: F821 type: ignore
+        x = self.df[self.features].iloc[idx]
+        y = self.df[self.target].iloc[idx]
+        return x, y
 
 
 class SunspotDataset(DatasetProtocol):
