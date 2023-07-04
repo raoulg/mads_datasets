@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mads-datasets"
-version = "0.1.5.3"
+version = "0.1.5.4"
 description = "Datasets for the master applied data science"
 authors = ["Raoul Grouls <Raoul.Grouls@han.nl>"]
 license = "MIT"
@@ -20,6 +20,7 @@ numpy = "^1.24.3"
 pydantic = "^1.10.8"
 pillow = "^9.5.0"
 torchtext = "^0.15.2"
+pandas = { version = "^2.0.2", optional = true }
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.3.0"
@@ -34,6 +35,9 @@ jupyter = "^1.0.0"
 [tool.poetry.group.tests.dependencies]
 responses = "^0.23.1"
 
+[tool.poetry.extras]
+pandas = ["pandas"]
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
@@ -42,5 +46,3 @@ build-backend = "poetry.core.masonry.api"
 filterwarnings = [
     "ignore::DeprecationWarning:jupyter_client.*:",
 ]
-
-[tool.poetry.extras]
