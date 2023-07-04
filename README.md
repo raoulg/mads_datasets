@@ -15,11 +15,12 @@ poetry add mads_datasets
 
 ## Data Types
 Currently, it supports the following datasets:
-* Sunspots Time-Series data
+* SUNSPOTS Time-Series data
 * IMDB Text data
-* Flowers Image data
-* Fashion MNIST Image data
-* Gestures Time-Series data
+* FLOWERS Image data
+* FASHION MNIST Image data
+* GESTURES Time-Series data
+* IRIS dataset
 
 ## Usage
 
