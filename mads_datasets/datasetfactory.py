@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import random
+import re
 import shutil
 from abc import ABC, abstractmethod
 from collections import Counter, OrderedDict
@@ -32,6 +33,7 @@ from mads_datasets.datasets import (
     DatasetProtocol,
     ImgDataset,
     MNISTDataset,
+    PdDataset,
     SunspotDataset,
     TextDataset,
     TSDataset,
@@ -47,14 +49,16 @@ from mads_datasets.settings import (
     DatasetSettings,
     DatasetType,
     ImgDatasetSettings,
+    PdDatasetSettings,
     TextDatasetSettings,
     WindowedDatasetSettings,
     fashionmnistsettings,
     flowersdatasetsettings,
     gesturesdatasetsettings,
     imdbdatasetsettings,
+    irissettings,
     sunspotsettings,
-    irissettings
+    penguinssettings,
 )
 
 Tensor = torch.Tensor
@@ -137,9 +141,54 @@ class AbstractDatasetFactory(ABC, Generic[T]):
         )
         return {"train": trainstreamer, "valid": validstreamer}
 
-class IrisDatasetFactory(AbstractDatasetFactory[DatasetSettings]):
-    def create_dataset(self, *args: Any, **kwargs: Any) -> Mapping[str, DatasetProtocol]:
+class PenguinsDatasetFactory(AbstractDatasetFactory[DatasetSettings]):
+    def create_dataset(self, *args, **kwargs) -> Mapping[str, DatasetProtocol]:
         pass
+
+class IrisDatasetFactory(AbstractDatasetFactory[PdDatasetSettings]):
+    def create_dataset(
+        self, *args: Any, **kwargs: Any
+    ) -> Mapping[str, DatasetProtocol]:
+        try:
+            import pandas as pd
+        except ImportError:
+            raise ImportError(
+                "The 'pandas' package is required for the iris dataset. "
+                'You can update existing environments it by running poetry install --extras "pandas"'
+                "or pip install mads-datasets[pandas] --upgrade"
+            )
+        self.download_data()
+        df = pd.read_csv(
+            self.filepath,
+            header=None,
+            names=self._settings.features + [self._settings.target],
+        )
+        df["sepal_width"].fillna(value=df["sepal_width"].mean(), inplace=True)
+        df[self._settings.target] = df[self._settings.target].apply(
+            lambda x: re.sub(r"setsoa", "setosa", x)
+        )
+        df.drop_duplicates(inplace=True)
+        df["petal_width"] = df["petal_width"].apply(
+            lambda x: float(re.findall(r"(\d+\.?\d*) mm", x)[0]) / 10
+        )
+        idx = df[df["sepal_length"] == 58].index
+        df.loc[idx, "sepal_length"] = 5.8
+
+        train = df.sample(frac=0.6)
+        valid = df.drop(train.index)
+
+        trainset = PdDataset(
+            train, features=self._settings.features, target=self._settings.target
+        )
+        validset = PdDataset(
+            valid, features=self._settings.features, target=self._settings.target
+        )
+        return {"train": trainset, "valid": validset}
+
+    def create_datastreamer(
+        self, batchsize: int, **kwargs
+    ) -> Mapping[str, DatastreamerProtocol]:
+        raise NotImplementedError("Not implemented yet...")
 
 
 class SunspotsDatasetFactory(AbstractDatasetFactory[WindowedDatasetSettings]):
@@ -389,9 +438,7 @@ class IMDBTokenizer(BaseTokenizer):
 class DatasetFactoryProvider:
     @staticmethod
     def create_factory(dataset_type: DatasetType, **kwargs) -> AbstractDatasetFactory:
-        datadir = Path(
-            kwargs.get("datadir", Path.home() / ".cache/mads_datasets")
-        )
+        datadir = Path(kwargs.get("datadir", Path.home() / ".cache/mads_datasets"))
         if dataset_type == DatasetType.FLOWERS:
             preprocessor = kwargs.get("preprocessor", BasePreprocessor)
             return FlowersDatasetFactory(
@@ -418,7 +465,12 @@ class DatasetFactoryProvider:
                 sunspotsettings, preprocessor=preprocessor, datadir=datadir
             )
         if dataset_type == DatasetType.IRIS:
-            return IrisDatasetFactory(irissettings, preprocessor=None, datadir=datadir)
+            preprocessor = kwargs.get("preprocessor", BasePreprocessor)
+            return IrisDatasetFactory(irissettings, preprocessor=preprocessor, datadir=datadir)
+
+        if dataset_type == DatasetType.PENGUINS:
+            preprocessor = kwargs.get("preprocessor", BasePreprocessor)
+            return PenguinsDatasetFactory(penguinssettings, preprocessor=preprocessor, datadir=datadir)
 
         raise ValueError(f"Invalid dataset type: {dataset_type}")
 
