@@ -17,6 +17,7 @@ class FileTypes(Enum):
     GZ = ".gz"
     PT = ".pt"
     CSV = ".csv"
+    PARQ = ".parq"
 
 
 class ReportTypes(Enum):
@@ -33,6 +34,7 @@ class DatasetType(Enum):
     FASHION = 4
     SUNSPOTS = 5
     IRIS = 6
+    PENGUINS = 7
 
 
 class BaseSettings(BaseModel):
@@ -47,7 +49,7 @@ class DatasetSettings(BaseSettings):
     dataset_url: HttpUrl
     filename: Path
     name: str
-    formats: List[FileTypes]
+    formats: Optional[List[FileTypes]] = None
     digest: Optional[str] = None
 
 
@@ -66,12 +68,27 @@ class WindowedDatasetSettings(DatasetSettings):
     horizon: int
     window_size: int
 
-irissettings = DatasetSettings(
-    dataset_url=cast(HttpUrl, "https://github.com/raoulg/data_assets/raw/main/iris_dirty.csv"),
+
+class PdDatasetSettings(DatasetSettings):
+    target: str
+    features: List[str]
+
+penguinssettings = DatasetSettings(
+    dataset_url=cast(HttpUrl, "https://github.com/raoulg/juliaintro/raw/main/data/palmerpenguins.parq"),
+    filename=Path("penguins.parq"),
+    name="penguins",
+    digest="675e2a75750d0e076df810893e675476"
+)
+
+irissettings = PdDatasetSettings(
+    dataset_url=cast(
+        HttpUrl, "https://github.com/raoulg/data_assets/raw/main/iris_dirty.csv"
+    ),
     filename=Path("iris.csv"),
     name="iris",
-    formats=[FileTypes.CSV],
-    digest="3679279dc61f6fdd859be9888db27f75"
+    target="class",
+    features=["sepal_length", "sepal_width", "petal_length", "petal_width"],
+    digest="3679279dc61f6fdd859be9888db27f75",
 )
 
 sunspotsettings = WindowedDatasetSettings(
