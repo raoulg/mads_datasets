@@ -3,4 +3,4 @@ from mads_datasets.settings import DatasetType
 
 __all__ = ["DatasetFactoryProvider", "DatasetType"]
 
-__version__ = "0.1.5.3"
+__version__ = "0.1.5.4"
