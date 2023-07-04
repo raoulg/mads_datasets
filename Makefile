@@ -1,4 +1,4 @@
-.PHONY: help install test lint format
+.PHONY: install test lint format
 
 
 install:
