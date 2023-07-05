@@ -2,15 +2,15 @@
 
 
 install:
-	poetry install
+	pdm install
 
 test:
-	poetry run pytest
+	pdm run pytest
 
 lint:
-	poetry run flake8 mads_datasets
-	poetry run mypy mads_datasets
+	pdm run ruff mads_datasets
+	pdm run mypy mads_datasets
 
 format:
-	poetry run isort -v mads_datasets
-	poetry run black mads_datasets
+	pdm run isort -v mads_datasets
+	pdm run black mads_datasets
