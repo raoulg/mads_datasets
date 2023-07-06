@@ -5,16 +5,19 @@ import tarfile
 import zipfile
 from datetime import datetime
 from pathlib import Path
-from typing import Iterator, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Iterator, List, Optional, Tuple, Union
 
 import requests
-import torch
 from loguru import logger
 from tqdm import tqdm
 
+from mads_datasets.base import import_torch
 from mads_datasets.settings import FileTypes
 
-Tensor = torch.Tensor
+if TYPE_CHECKING:
+    import torch
+
+    Tensor = torch.Tensor
 
 
 def walk_dir(path: Path) -> Iterator:
@@ -129,7 +132,7 @@ def clean_dir(dir: Union[str, Path]) -> None:
         dir.mkdir(parents=True)
 
 
-def window(x: Tensor, n_time: int) -> Tensor:
+def window(x: "Tensor", n_time: int) -> "Tensor":
     """
     Generates and index that can be used to window a timeseries.
     E.g. the single series [0, 1, 2, 3, 4, 5] can be windowed into 4 timeseries with
@@ -143,11 +146,12 @@ def window(x: Tensor, n_time: int) -> Tensor:
     We now can feed 4 different timeseries into the model, instead of 1, all
     with the same length.
     """
-    n_window = len(x) - n_time + 1
-    time = torch.arange(0, n_time).reshape(1, -1)
-    window = torch.arange(0, n_window).reshape(-1, 1)
-    idx = time + window
-    return idx
+    with import_torch() as torch:  # type: ignore
+        n_window = len(x) - n_time + 1
+        time = torch.arange(0, n_time).reshape(1, -1)  # type: ignore
+        window = torch.arange(0, n_window).reshape(-1, 1)  # type: ignore
+        idx = time + window
+        return idx
 
 
 def dir_add_timestamp(log_dir: Optional[Path] = None) -> Path:
