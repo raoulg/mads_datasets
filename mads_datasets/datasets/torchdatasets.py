@@ -5,7 +5,8 @@ import numpy as np
 from PIL import Image
 from tqdm import tqdm
 
-from mads_datasets.base import AbstractDataset, DatasetProtocol, import_torch
+from mads_datasets.base import AbstractDataset, DatasetProtocol
+from mads_datasets.datatools import import_torch
 
 if TYPE_CHECKING:
     import torch

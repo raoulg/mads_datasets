@@ -3,7 +3,6 @@ import random
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import (
-    TYPE_CHECKING,
     Callable,
     Generic,
     Iterator,
@@ -15,11 +14,6 @@ from typing import (
     Tuple,
     TypeVar,
 )
-
-if TYPE_CHECKING:
-    import torch
-
-from contextlib import contextmanager
 
 import numpy as np
 from loguru import logger
@@ -186,17 +180,3 @@ class BaseDatastreamer:
             batch = self.batchloop()
             X, Y = self.preprocessor(batch)  # noqa N806
             yield X, Y
-
-
-@contextmanager
-def import_torch() -> Optional["torch"]:  # type: ignore
-    try:
-        import torch
-    except ImportError:
-        logger.warning(
-            "Torch is not installed."
-            "Please install 'mads-datasets[torch]' to use this feature."
-        )
-        yield None
-    else:
-        yield torch

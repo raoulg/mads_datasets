@@ -5,9 +5,10 @@ from typing import TYPE_CHECKING, Any, Mapping
 
 import numpy as np
 
-from mads_datasets.base import AbstractDatasetFactory, DatasetProtocol, import_torch
+from mads_datasets.base import AbstractDatasetFactory, DatasetProtocol
 from mads_datasets.datasets import ImgDataset, MNISTDataset, SunspotDataset, TSDataset
 from mads_datasets.datatools import (
+    import_torch,
     iter_valid_paths,
     keep_subdirs_only,
     walk_dir,

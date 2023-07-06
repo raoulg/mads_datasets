@@ -3,6 +3,7 @@ from __future__ import annotations
 import shutil
 import tarfile
 import zipfile
+from contextlib import contextmanager
 from datetime import datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, Iterator, List, Optional, Tuple, Union
@@ -11,7 +12,6 @@ import requests
 from loguru import logger
 from tqdm import tqdm
 
-from mads_datasets.base import import_torch
 from mads_datasets.settings import FileTypes
 
 if TYPE_CHECKING:
@@ -170,3 +170,17 @@ def keep_subdirs_only(path: Path) -> None:
     files = [file for file in path.iterdir() if file.is_file()]
     for file in files:
         file.unlink()
+
+
+@contextmanager
+def import_torch() -> Optional["torch"]:  # type: ignore
+    try:
+        import torch
+    except ImportError:
+        logger.warning(
+            "Torch is not installed."
+            "Please install 'mads-datasets[torch]' to use this feature."
+        )
+        yield None
+    else:
+        yield torch
