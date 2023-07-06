@@ -73,11 +73,15 @@ class PdDatasetSettings(DatasetSettings):
     target: str
     features: List[str]
 
+
 penguinssettings = DatasetSettings(
-    dataset_url=cast(HttpUrl, "https://github.com/raoulg/juliaintro/raw/main/data/palmerpenguins.parq"),
+    dataset_url=cast(
+        HttpUrl,
+        "https://github.com/raoulg/juliaintro/raw/main/data/palmerpenguins.parq",
+    ),
     filename=Path("penguins.parq"),
     name="penguins",
-    digest="675e2a75750d0e076df810893e675476"
+    digest="675e2a75750d0e076df810893e675476",
 )
 
 irissettings = PdDatasetSettings(

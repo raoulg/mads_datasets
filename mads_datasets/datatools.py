@@ -77,7 +77,7 @@ def get_file(
         filename (Path): filename
         url (str): url to obtain filename
         unzip (bool, optional): If the file needs unzipping
-        overwrite (bool, optional): If the file needs to be overwritten, if it already exists.
+        overwrite (bool, optional): overwrite file, if it already exists.
 
     Returns:
         Path: _description_
