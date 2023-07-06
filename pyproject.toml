@@ -1,20 +1,18 @@
 [project]
 name = "mads-datasets"
-version = "0.1.6"
+version = "0.2"
 description = "Datasets for the master applied data science"
 authors = [
     {name = "Raoul Grouls", email = "Raoul.Grouls@han.nl"},
 ]
 
 dependencies = [
-    "torch>=2.0.1",
     "tqdm>=4.65.0",
     "requests>=2.31.0",
     "loguru>=0.7.0",
     "numpy>=1.24.3",
     "pydantic>=1.10.8",
     "pillow>=9.5.0",
-    "torchtext>=0.15.2",
     "pandas>=2.0.3",
 ]
 requires-python = ">=3.8"
@@ -27,6 +25,7 @@ lint = [
     "black>=23.3.0",
     "mypy>=1.4.1",
     "isort>=5.12.0",
+    "types-requests>=2.31.0.1",
 ]
 tests = [
     "pytest>=7.4.0",
@@ -38,7 +37,9 @@ tests = [
 GitHub = "https://github.com/raoulg/mads_datasets"
 
 [project.optional-dependencies]
-pandas = ["pandas>=2.0.2"]
+torch = [
+    "torch>=2.0.1",
+]
 
 [project.group.tests.dependencies]
 responses = "^0.23.1"
