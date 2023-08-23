@@ -72,6 +72,7 @@ def get_file(
     url: str,
     unzip: bool = True,
     overwrite: bool = False,
+    headers: dict = None,
 ) -> Path:
     """Download a file from url to location data_dir / filename
 
@@ -90,7 +91,9 @@ def get_file(
     if path.exists() and not overwrite:
         logger.info(f"File {path} already exists, skip download")
         return path
-    response = requests.get(url, stream=True)
+    response = requests.get(url, stream=True, headers=headers)
+    if response.status_code != 200:
+        raise ValueError(f"Request failed with status code {response.status_code}")
     total_size_in_bytes = int(response.headers.get("content-length", 0))
     block_size = 2**10
     progress_bar = tqdm(
