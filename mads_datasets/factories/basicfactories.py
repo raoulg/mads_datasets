@@ -3,6 +3,7 @@ import shutil
 from typing import Any, Mapping
 
 import pandas as pd
+import polars as pl
 from loguru import logger
 
 from mads_datasets.base import (
@@ -10,11 +11,12 @@ from mads_datasets.base import (
     DatasetProtocol,
     DatastreamerProtocol,
 )
-from mads_datasets.datasets import PdDataset, TextDataset
+from mads_datasets.datasets import PdDataset, PolarsDataset, TextDataset
 from mads_datasets.datatools import keep_subdirs_only, walk_dir
 from mads_datasets.settings import (
     DatasetSettings,
     PdDatasetSettings,
+    SecureDatasetSettings,
     TextDatasetSettings,
 )
 
@@ -88,3 +90,15 @@ class IMDBDatasetFactory(AbstractDatasetFactory[TextDatasetSettings]):
         traindataset = TextDataset(paths=trainpaths)
         testdataset = TextDataset(paths=testpaths)
         return {"train": traindataset, "valid": testdataset}
+
+
+class SecureDatasetFactory(AbstractDatasetFactory[SecureDatasetSettings]):
+    def create_dataset(
+        self, *args: Any, **kwargs: Any
+    ) -> Mapping[str, DatasetProtocol]:
+        self.download_data()
+
+        df = pl.read_parquet(self.filepath)
+        dataset = PolarsDataset(df)
+
+        return {"train": dataset}

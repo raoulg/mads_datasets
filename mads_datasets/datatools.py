@@ -8,11 +8,12 @@ from datetime import datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, Iterator, List, Optional, Tuple, Union
 
+import keyring
 import requests
 from loguru import logger
 from tqdm import tqdm
 
-from mads_datasets.settings import FileTypes
+from mads_datasets.settings import FileTypes, SecureDatasetSettings
 
 if TYPE_CHECKING:
     import torch
@@ -187,3 +188,20 @@ def import_torch() -> Optional["torch"]:  # type: ignore
         yield None
     else:
         yield torch
+
+
+def check_token(account: str, name: str) -> str:
+    token = keyring.get_password(account, name)
+    if token is None:
+        logger.warning(f"No token for {account} and {name}. Please enter your token.")
+        token = input("Token: ")
+        keyring.set_password(account, name, token)
+    return token
+
+
+def create_headers(settings: SecureDatasetSettings) -> dict:
+    token = check_token(settings.keyaccount, settings.keyname)
+    headers = {
+        "PRIVATE-TOKEN": token,
+    }
+    return headers

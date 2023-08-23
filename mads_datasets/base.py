@@ -3,6 +3,7 @@ import random
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import (
+    Any,
     Callable,
     Generic,
     Iterator,
@@ -18,15 +19,15 @@ from typing import (
 import numpy as np
 from loguru import logger
 
-from mads_datasets.datatools import get_file
-from mads_datasets.settings import DatasetSettings
+from mads_datasets.datatools import create_headers, get_file
+from mads_datasets.settings import DatasetSettings, SecureDatasetSettings
 
 
 class DatasetProtocol(Protocol):
     def __len__(self) -> int:
         ...
 
-    def __getitem__(self, idx: int) -> Tuple:
+    def __getitem__(self, idx: int) -> Any:
         ...
 
 
@@ -70,6 +71,11 @@ class AbstractDatasetFactory(ABC, Generic[T]):
         self._settings = settings
         self.datadir = datadir
 
+        if type(settings) == SecureDatasetSettings:
+            self.secure = True
+        else:
+            self.secure = False
+
     @property
     def settings(self) -> T:
         return self._settings
@@ -78,11 +84,17 @@ class AbstractDatasetFactory(ABC, Generic[T]):
         url = self._settings.dataset_url
         filename = self._settings.filename
         self.subfolder = Path(self.datadir) / self.settings.name
+
+        if self.secure:
+            headers = create_headers(self._settings)  # type: ignore
+        else:
+            headers = None
+
         if not self.subfolder.exists():
             logger.info("Start download...")
             self.subfolder.mkdir(parents=True)
             self.filepath = get_file(
-                self.subfolder, filename, url=str(url), overwrite=False
+                self.subfolder, filename, url=str(url), overwrite=False, headers=headers
             )
         else:
             logger.info(f"Dataset already exists at {self.subfolder}")
