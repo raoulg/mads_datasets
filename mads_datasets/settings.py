@@ -35,6 +35,7 @@ class DatasetType(Enum):
     SUNSPOTS = 5
     IRIS = 6
     PENGUINS = 7
+    GARBAGE = 8
 
 
 class BaseSettings(BaseModel):
@@ -72,6 +73,23 @@ class WindowedDatasetSettings(DatasetSettings):
 class PdDatasetSettings(DatasetSettings):
     target: str
     features: List[str]
+
+
+class SecureDatasetSettings(DatasetSettings):
+    keyaccount: str
+    keyname: str
+
+
+garbagesettings = SecureDatasetSettings(
+    dataset_url=cast(
+        HttpUrl,
+        "https://gitlab.com/api/v4/projects/45319413/repository/files/data%2Fraw%2FHECTORdata%2Eparquet/raw?ref=feature%2Fprojectdata&lfs=true",
+    ),
+    filename=Path("garbage.parq"),
+    name="garbage",
+    keyaccount="gitlab-MADS-PAT",
+    keyname="gitlab-MADS-PAT",
+)
 
 
 penguinssettings = DatasetSettings(

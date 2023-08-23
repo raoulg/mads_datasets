@@ -8,12 +8,14 @@ from mads_datasets.factories import (
     IMDBDatasetFactory,
     IrisDatasetFactory,
     PenguinsDatasetFactory,
+    SecureDatasetFactory,
     SunspotsDatasetFactory,
 )
 from mads_datasets.settings import (
     DatasetType,
     fashionmnistsettings,
     flowersdatasetsettings,
+    garbagesettings,
     gesturesdatasetsettings,
     imdbdatasetsettings,
     irissettings,
@@ -23,7 +25,7 @@ from mads_datasets.settings import (
 
 __all__ = ["DatasetFactoryProvider", "DatasetType"]
 
-__version__ = "0.2.2"
+__version__ = "0.3"
 
 
 class DatasetFactoryProvider:
@@ -44,5 +46,7 @@ class DatasetFactoryProvider:
             return IrisDatasetFactory(irissettings, datadir=datadir)
         if dataset_type == DatasetType.PENGUINS:
             return PenguinsDatasetFactory(penguinssettings, datadir=datadir)
+        if dataset_type == DatasetType.GARBAGE:
+            return SecureDatasetFactory(garbagesettings, datadir=datadir)
 
         raise ValueError(f"Invalid dataset type: {dataset_type}")
