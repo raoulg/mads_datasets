@@ -1,4 +1,9 @@
-from mads_datasets.datasets.basicdatasets import FacesDataset, PdDataset, TextDataset
+from mads_datasets.datasets.basicdatasets import (
+    FacesDataset,
+    PdDataset,
+    PolarsDataset,
+    TextDataset,
+)
 from mads_datasets.datasets.torchdatasets import (
     ImgDataset,
     MNISTDataset,
@@ -9,6 +14,7 @@ from mads_datasets.datasets.torchdatasets import (
 
 __all__ = [
     "PdDataset",
+    "PolarsDataset",
     "FacesDataset",
     "TextDataset",
     "SunspotDataset",

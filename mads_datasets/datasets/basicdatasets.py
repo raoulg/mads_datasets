@@ -8,6 +8,7 @@ from mads_datasets.base import AbstractDataset, DatasetProtocol
 
 if TYPE_CHECKING:
     import pandas as pd
+    import polars as pl
 
 
 class PdDataset(DatasetProtocol):
@@ -30,6 +31,17 @@ class PdDataset(DatasetProtocol):
         x = self.df[self.features].iloc[idx]
         y = self.df[self.target].iloc[idx]
         return x, y
+
+
+class PolarsDataset(DatasetProtocol):
+    def __init__(self, df: "pl.DataFrame"):
+        self.df = df
+
+    def __len__(self) -> int:
+        return len(self.df)
+
+    def __getitem__(self, idx) -> "pl.DataFrame":
+        return self.df[idx]
 
 
 class FacesDataset(AbstractDataset):
