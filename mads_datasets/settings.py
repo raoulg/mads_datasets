@@ -89,6 +89,7 @@ garbagesettings = SecureDatasetSettings(
     name="garbage",
     keyaccount="gitlab-MADS-PAT",
     keyname="gitlab-MADS-PAT",
+    digest="b5ee4ab8723e0d97e0eefa12e347d04e",
 )
 
 
