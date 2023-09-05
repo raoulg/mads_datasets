@@ -102,3 +102,16 @@ class SecureDatasetFactory(AbstractDatasetFactory[SecureDatasetSettings]):
         dataset = PolarsDataset(df)
 
         return {"train": dataset}
+
+class FavoritaDatasetFactory(AbstractDatasetFactory[DatasetSettings]):
+    def create_dataset(
+        self, *args: Any, **kwargs: Any
+    ) -> Mapping[str, DatasetProtocol]:
+        self.download_data()
+
+        trainfile = self.subfolder / "train.parq"
+
+        df = pl.read_parquet(trainfile)
+        dataset = PolarsDataset(df)
+
+        return {"train": dataset}

@@ -3,19 +3,19 @@ from pathlib import Path
 from mads_datasets.base import AbstractDatasetFactory
 from mads_datasets.factories import (
     FashionDatasetFactory,
+    FavoritaDatasetFactory,
     FlowersDatasetFactory,
     GesturesDatasetFactory,
     IMDBDatasetFactory,
     IrisDatasetFactory,
     PenguinsDatasetFactory,
-    SecureDatasetFactory,
     SunspotsDatasetFactory,
 )
 from mads_datasets.settings import (
     DatasetType,
     fashionmnistsettings,
+    favoritasettings,
     flowersdatasetsettings,
-    garbagesettings,
     gesturesdatasetsettings,
     imdbdatasetsettings,
     irissettings,
@@ -25,7 +25,7 @@ from mads_datasets.settings import (
 
 __all__ = ["DatasetFactoryProvider", "DatasetType"]
 
-__version__ = "0.3.1"
+__version__ = "0.3.2"
 
 
 class DatasetFactoryProvider:
@@ -46,7 +46,7 @@ class DatasetFactoryProvider:
             return IrisDatasetFactory(irissettings, datadir=datadir)
         if dataset_type == DatasetType.PENGUINS:
             return PenguinsDatasetFactory(penguinssettings, datadir=datadir)
-        if dataset_type == DatasetType.GARBAGE:
-            return SecureDatasetFactory(garbagesettings, datadir=datadir)
+        if dataset_type == DatasetType.FAVORITA:
+            return FavoritaDatasetFactory(favoritasettings, datadir=datadir)
 
         raise ValueError(f"Invalid dataset type: {dataset_type}")

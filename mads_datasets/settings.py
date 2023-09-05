@@ -35,7 +35,7 @@ class DatasetType(Enum):
     SUNSPOTS = 5
     IRIS = 6
     PENGUINS = 7
-    GARBAGE = 8
+    FAVORITA = 8
 
 
 class BaseSettings(BaseModel):
@@ -80,16 +80,14 @@ class SecureDatasetSettings(DatasetSettings):
     keyname: str
 
 
-garbagesettings = SecureDatasetSettings(
+favoritasettings = DatasetSettings(
     dataset_url=cast(
-        HttpUrl,
-        "https://gitlab.com/api/v4/projects/45319413/repository/files/data%2Fraw%2FHECTORdata%2Eparquet/raw?ref=feature%2Fprojectdata&lfs=true",
+        HttpUrl, "https://github.com/raoulg/data_assets/raw/main/favorita.zip"
     ),
-    filename=Path("garbage.parq"),
-    name="garbage",
-    keyaccount="gitlab-MADS-PAT",
-    keyname="gitlab-MADS-PAT",
-    digest="b5ee4ab8723e0d97e0eefa12e347d04e",
+    filename=Path("favorita.zip"),
+    name="favorita",
+    formats=[FileTypes.PARQ],
+    digest="284fa8134fce7d918d95ccd975c8f14d",
 )
 
 

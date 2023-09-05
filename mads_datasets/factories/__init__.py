@@ -1,4 +1,5 @@
 from mads_datasets.factories.basicfactories import (
+    FavoritaDatasetFactory,
     IMDBDatasetFactory,
     IrisDatasetFactory,
     PenguinsDatasetFactory,
@@ -13,6 +14,7 @@ from mads_datasets.factories.torchfactories import (
 
 __all__ = [
     "PenguinsDatasetFactory",
+    "FavoritaDatasetFactory",
     "IrisDatasetFactory",
     "IMDBDatasetFactory",
     "SecureDatasetFactory",
