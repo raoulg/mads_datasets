@@ -1,6 +1,6 @@
 [project]
 name = "mads-datasets"
-version = "0.3.1"
+version = "0.3.2"
 description = "Datasets for the master applied data science"
 authors = [
     {name = "Raoul Grouls", email = "Raoul.Grouls@han.nl"},
