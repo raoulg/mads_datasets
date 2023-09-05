@@ -3,7 +3,7 @@
 This library provides the functionality to download, process, and stream several datasets.
 
 ## Installation
-This library has been published on PyPi and can be installed with pip or poetry.
+This library has been published on PyPi and can be installed with pip, conda, pdm or poetry.
 
 ```bash
 # Install with pip
@@ -11,16 +11,21 @@ pip install mads_datasets
 
 # Install with poetry
 poetry add mads_datasets
+
+# install with pdm
+pdm add mads_datasets
 ```
 
 ## Data Types
 Currently, it supports the following datasets:
-* SUNSPOTS Time-Series data
-* IMDB Text data
-* FLOWERS Image data
-* FASHION MNIST Image data
-* GESTURES Time-Series data
-* IRIS dataset
+* SUNSPOTS Time-Series data, 3000 monthly sunspot observations from 1749
+* IMDB Text data, 50k movie reviews with positive and negative sentiment labels
+* FLOWERS Image data, about 3000 large and complex images of 5 flowers
+* FASHION MNIST Image data, 60k images sized 28x28 pixels
+* GESTURES Time-Series data with x, y and z accelerometer data for 20 gestures.
+* IRIS dataset, 150 observations of 4 features of 3 iris flower species
+* PENGUINS dataset, an alternative to Iris with 344 penguins on multiple islands.
+* FAVORITA dataset, 125 million sales records of 50k products in 54 stores.
 
 ## Usage
 
