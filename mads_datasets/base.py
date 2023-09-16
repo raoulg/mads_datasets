@@ -97,8 +97,13 @@ class AbstractDatasetFactory(ABC, Generic[T]):
                 self.subfolder, filename, url=str(url), overwrite=False, headers=headers
             )
         else:
-            logger.info(f"Dataset already exists at {self.subfolder}")
+            logger.info(f"Folder already exists at {self.subfolder}")
             self.filepath = self.subfolder / filename
+            if self.filepath.exists():
+                logger.info(f"File already exists at {self.filepath}")
+            else:
+                logger.warning(f"Expected file does not exist at {self.filepath}")
+
 
         digest = self.calculate_md5(self.filepath)
         if self.settings.digest is not None:

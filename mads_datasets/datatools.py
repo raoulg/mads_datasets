@@ -121,10 +121,14 @@ def extract(path: Path) -> None:
         logger.info(f"Unzipping {path}")
         with zipfile.ZipFile(path, "r") as zip_ref:
             zip_ref.extractall(path.parent)
+
     if file_type in [FileTypes.TGZ, FileTypes.TAR, FileTypes.GZ]:
         logger.info(f"Unzipping {path}")
         with tarfile.open(path, "r:gz") as tar:
             tar.extractall(path=path.parent)
+
+    logger.info(f"Removing {path}")
+    path.unlink()
 
 
 def clean_dir(dir: Union[str, Path]) -> None:

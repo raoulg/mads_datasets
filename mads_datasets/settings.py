@@ -82,12 +82,12 @@ class SecureDatasetSettings(DatasetSettings):
 
 favoritasettings = DatasetSettings(
     dataset_url=cast(
-        HttpUrl, "https://github.com/raoulg/data_assets/raw/main/favorita.zip"
+        HttpUrl, "https://gitlab.com/api/v4/projects/50444079/repository/files/favorita%2Ezip/raw?lfs=true"
     ),
     filename=Path("favorita.zip"),
     name="favorita",
     formats=[FileTypes.PARQ],
-    digest="284fa8134fce7d918d95ccd975c8f14d",
+    digest="284fa8134fce7d918d95ccd975c8f14d"
 )
 
 
