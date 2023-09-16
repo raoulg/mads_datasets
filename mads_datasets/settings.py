@@ -50,6 +50,7 @@ class DatasetSettings(BaseSettings):
     dataset_url: HttpUrl
     filename: Path
     name: str
+    unzip: bool
     formats: Optional[List[FileTypes]] = None
     digest: Optional[str] = None
 
@@ -86,6 +87,7 @@ favoritasettings = DatasetSettings(
     ),
     filename=Path("favorita.zip"),
     name="favorita",
+    unzip=True,
     formats=[FileTypes.PARQ],
     digest="284fa8134fce7d918d95ccd975c8f14d"
 )
@@ -98,6 +100,7 @@ penguinssettings = DatasetSettings(
     ),
     filename=Path("penguins.parq"),
     name="penguins",
+    unzip=False,
     digest="675e2a75750d0e076df810893e675476",
 )
 
@@ -107,6 +110,7 @@ irissettings = PdDatasetSettings(
     ),
     filename=Path("iris.csv"),
     name="iris",
+    unzip=False,
     target="class",
     features=["sepal_length", "sepal_width", "petal_length", "petal_width"],
     digest="3679279dc61f6fdd859be9888db27f75",
@@ -116,6 +120,7 @@ sunspotsettings = WindowedDatasetSettings(
     dataset_url=cast(HttpUrl, "https://www.sidc.be/SILSO/DATA/SN_m_tot_V2.0.txt"),
     filename=Path("sunspots.txt"),
     name="sunspots",
+    unzip=False,
     formats=[],
     horizon=3,
     window_size=26,
@@ -128,6 +133,7 @@ fashionmnistsettings = DatasetSettings(
     ),
     filename=Path("fashionmnist.pt"),
     name="fashionmnist",
+    unzip=False,
     formats=[FileTypes.PT],
     digest="c4f1c3f76673fe3802f579773267163a",
 )
@@ -138,6 +144,7 @@ gesturesdatasetsettings = DatasetSettings(
     ),
     filename=Path("gestures-dataset.zip"),
     name="gestures",
+    unzip=True,
     formats=[FileTypes.TXT],
     digest="7966323b95154f314e831c312e5cc33b",
 )
@@ -164,6 +171,7 @@ imdbdatasetsettings = TextDatasetSettings(
     ),
     filename=Path("aclImdb_v1.tar.gz"),
     name="imdb",
+    unzip=True,
     formats=[FileTypes.TXT],
     maxvocab=10000,
     maxtokens=100,
@@ -178,6 +186,7 @@ flowersdatasetsettings = ImgDatasetSettings(
     ),
     filename=Path("flowers.tgz"),
     name="flowers",
+    unzip=True,
     formats=[FileTypes.JPG],
     trainfrac=0.8,
     img_size=(224, 224),

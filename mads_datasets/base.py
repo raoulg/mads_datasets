@@ -94,28 +94,38 @@ class AbstractDatasetFactory(ABC, Generic[T]):
             logger.info("Start download...")
             self.subfolder.mkdir(parents=True)
             self.filepath = get_file(
-                self.subfolder, filename, url=str(url), overwrite=False, headers=headers
+                self.subfolder,
+                filename,
+                url=str(url),
+                unzip=self._settings.unzip,
+                overwrite=False,
+                headers=headers,
             )
+            digest = self.calculate_md5(self.filepath)
+            if self.settings.digest is not None:
+                if digest != self.settings.digest:
+                    raise ValueError(
+                        f"Digest of {self.filepath} does not match expected digest"
+                        f"\nExpected: {self.settings.digest}\nGot: {digest}"
+                    )
+                else:
+                    logger.info(f"Digest of {self.filepath} matches expected digest")
+            else:
+                logger.info(f"Digest of downloaded {self.filepath} is {digest}")
+
+            if self._settings.unzip:
+                logger.info(f"Removing unzipped file {self.filepath}")
+                self.filepath.unlink()
+
         else:
             logger.info(f"Folder already exists at {self.subfolder}")
             self.filepath = self.subfolder / filename
             if self.filepath.exists():
                 logger.info(f"File already exists at {self.filepath}")
             else:
-                logger.warning(f"Expected file does not exist at {self.filepath}")
+                if not self._settings.unzip:
+                    logger.warning(f"Expected file does not exist at {self.filepath}")
 
-
-        digest = self.calculate_md5(self.filepath)
-        if self.settings.digest is not None:
-            if digest != self.settings.digest:
-                raise ValueError(
-                    f"Digest of {self.filepath} does not match expected digest"
-                    f"\nExpected: {self.settings.digest}\nGot: {digest}"
-                )
-            else:
-                logger.info(f"Digest of {self.filepath} matches expected digest")
-        else:
-            logger.info(f"Digest of downloaded {self.filepath} is {digest}")
 
     @staticmethod
     def calculate_md5(file_path: Path, block_size: int = 2**16) -> str:

@@ -127,9 +127,6 @@ def extract(path: Path) -> None:
         with tarfile.open(path, "r:gz") as tar:
             tar.extractall(path=path.parent)
 
-    logger.info(f"Removing {path}")
-    path.unlink()
-
 
 def clean_dir(dir: Union[str, Path]) -> None:
     dir = Path(dir)
