@@ -1,4 +1,5 @@
 from pathlib import Path
+from loguru import logger
 
 from mads_datasets.base import AbstractDatasetFactory
 from mads_datasets.factories import (
@@ -9,6 +10,7 @@ from mads_datasets.factories import (
     IMDBDatasetFactory,
     IrisDatasetFactory,
     PenguinsDatasetFactory,
+    SecureDatasetFactory,
     SunspotsDatasetFactory,
 )
 from mads_datasets.settings import (
@@ -21,11 +23,12 @@ from mads_datasets.settings import (
     irissettings,
     penguinssettings,
     sunspotsettings,
+    SecureDatasetSettings,
 )
 
 __all__ = ["DatasetFactoryProvider", "DatasetType"]
 
-__version__ = "0.3.4"
+__version__ = "0.3.6"
 
 
 class DatasetFactoryProvider:
@@ -48,5 +51,17 @@ class DatasetFactoryProvider:
             return PenguinsDatasetFactory(penguinssettings, datadir=datadir)
         if dataset_type == DatasetType.FAVORITA:
             return FavoritaDatasetFactory(favoritasettings, datadir=datadir)
+        if dataset_type == DatasetType.SECURE:
+            securesettings = kwargs.get("settings", None)
+            if not securesettings:
+                logger.warning(
+                    "No settings provided for SecureDatasetFactory."
+                )
+            if not isinstance(securesettings, SecureDatasetSettings):
+                raise ValueError(
+                    f"Invalid settings type: {type(securesettings)}. "
+                    "Expected SecureDatasetSettings."
+                )
+            return SecureDatasetFactory(securesettings, datadir=datadir)
 
         raise ValueError(f"Invalid dataset type: {dataset_type}")

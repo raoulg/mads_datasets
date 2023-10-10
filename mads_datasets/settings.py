@@ -36,6 +36,7 @@ class DatasetType(Enum):
     IRIS = 6
     PENGUINS = 7
     FAVORITA = 8
+    SECURE = 9
 
 
 class BaseSettings(BaseModel):
