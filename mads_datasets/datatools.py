@@ -7,9 +7,11 @@ from contextlib import contextmanager
 from datetime import datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, Iterator, List, Optional, Tuple, Union
+from keyring.errors import NoKeyringError
 
 import keyring
 import requests
+import os
 from loguru import logger
 from tqdm import tqdm
 
@@ -192,16 +194,37 @@ def import_torch() -> Optional["torch"]:  # type: ignore
 
 
 def check_token(account: str, name: str) -> str:
-    token = keyring.get_password(account, name)
-    if token is None:
-        logger.warning(f"No token for {account} and {name}. Please enter your token.")
-        token = input("Token: ")
+    haskeyring = True
+    notstored = False
+    try:
+        token = keyring.get_password(account, name)
+        if not token:
+            notstored = True
+    except NoKeyringError as e:
+        haskeyring = False
+        logger.warning(
+            f"Failed to find a keyring backend: {e}"
+            f"Falling back to environment to obtain token from variable {account}."
+        )
+        token = os.environ.get(account)
+        if not token:
+            logger.warning(
+                f"Could not obtain {account} from the environment."
+                "Please add this to your environment"
+            )
+
+    if not token:
+            logger.info("Enter your token for {account} and {name} manually:")
+            token = input("Token: ")
+    if haskeyring and notstored:
+        logger.info(f"Storing token for {account} and {name} in keyring.")
         keyring.set_password(account, name, token)
     return token
 
 
 def create_headers(settings: SecureDatasetSettings) -> dict:
     token = check_token(settings.keyaccount, settings.keyname)
+
     headers = {
         "PRIVATE-TOKEN": token,
     }
