@@ -28,7 +28,7 @@ from mads_datasets.settings import (
 
 __all__ = ["DatasetFactoryProvider", "DatasetType"]
 
-__version__ = "0.3.7"
+__version__ = "0.3.8"
 
 
 class DatasetFactoryProvider:
@@ -54,9 +54,7 @@ class DatasetFactoryProvider:
         if dataset_type == DatasetType.SECURE:
             securesettings = kwargs.get("settings", None)
             if not securesettings:
-                logger.warning(
-                    "No settings provided for SecureDatasetFactory."
-                )
+                logger.warning("No settings provided for SecureDatasetFactory.")
             if not isinstance(securesettings, SecureDatasetSettings):
                 raise ValueError(
                     f"Invalid settings type: {type(securesettings)}. "
