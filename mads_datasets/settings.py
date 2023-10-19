@@ -125,7 +125,7 @@ sunspotsettings = WindowedDatasetSettings(
     formats=[],
     horizon=3,
     window_size=26,
-    digest="4ba2c195441e535045699468dae40fb0",
+    digest="b0c58f706c1e14a1faaa35635b51679e",
 )
 
 fashionmnistsettings = DatasetSettings(
