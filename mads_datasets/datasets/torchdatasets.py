@@ -33,6 +33,9 @@ class SunspotDataset(DatasetProtocol):
         )  # squeeze will remove the last dimension if possible.
         return x, y
 
+    def __repr__(self) -> str:
+        return f"SunspotDataset (len {len(self)})"
+
 
 class TensorDataset(DatasetProtocol):
     """The main responsibility of the Dataset class is to
@@ -43,6 +46,9 @@ class TensorDataset(DatasetProtocol):
         self.data = data
         self.targets = targets
         assert len(data) == len(targets)
+
+    def __repr__(self) -> str:
+        return f"TensorDataset (len {len(self)})"
 
 
 class MNISTDataset(DatasetProtocol):
@@ -75,6 +81,9 @@ class MNISTDataset(DatasetProtocol):
             label = self.labels[idx].type(torch.uint8)  # type: ignore
             return image, label
 
+    def __repr__(self) -> str:
+        return f"MNISTDataset (len {len(self)})"
+
 
 class ImgDataset(AbstractDataset):
     def __init__(
@@ -88,9 +97,9 @@ class ImgDataset(AbstractDataset):
         with import_torch() as torch:  # type: ignore
             for file in self.paths:
                 img = self.load_image(file, self.img_size)
-                x_ = np.reshape(img, (1,) + img.shape)
+                x_ = np.transpose(img, (2, 0, 1))
                 x = torch.tensor(x_ / 255.0).type(torch.float32)  # type: ignore
-                y = self.class_names.index(file.parent.name)
+                y = torch.tensor(self.class_names.index(file.parent.name))
                 self.dataset.append((x, y))
 
     def load_image(self, path: Path, image_size: Tuple[int, int]) -> np.ndarray:
