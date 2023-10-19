@@ -32,6 +32,9 @@ class PdDataset(DatasetProtocol):
         y = self.df[self.target].iloc[idx]
         return x, y
 
+    def __repr__(self) -> str:
+        return f"PdDataset (len {len(self)})"
+
 
 class PolarsDataset(DatasetProtocol):
     def __init__(self, df: "pl.DataFrame"):
