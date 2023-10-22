@@ -6,7 +6,7 @@ groups = ["default", "lint", "tests", "torch"]
 cross_platform = true
 static_urls = false
 lock_version = "4.3"
-content_hash = "sha256:7babb4b37ff59ba9be8f62db6ea6c007a063b0c1c7264bfffcc96015bad3a390"
+content_hash = "sha256:fc54371336f6eb055c60ffe6c591845b260ab5e015aaaff5f7e8fca45e5aedbe"
 
 [[package]]
 name = "annotated-types"

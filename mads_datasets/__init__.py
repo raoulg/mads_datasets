@@ -28,7 +28,7 @@ from mads_datasets.settings import (
 
 __all__ = ["DatasetFactoryProvider", "DatasetType"]
 
-__version__ = "0.3.9"
+__version__ = "0.3.10"
 
 
 class DatasetFactoryProvider:
