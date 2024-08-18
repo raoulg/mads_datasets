@@ -3,7 +3,7 @@
 This library provides the functionality to download, process, and stream several datasets.
 
 ## Installation
-This library has been published on PyPi and can be installed with pip, conda, pdm or poetry.
+This library has been published on PyPi and can be installed with pip, conda, pdm, poetry or rye.
 
 ```bash
 # Install with pip
@@ -14,6 +14,9 @@ poetry add mads_datasets
 
 # install with pdm
 pdm add mads_datasets
+
+# install with rye
+rye add mads_datasets
 ```
 
 ## Data Types
