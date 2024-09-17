@@ -132,7 +132,7 @@ class FlowersDatasetFactory(AbstractDatasetFactory[ImgDatasetSettings]):
             self.subfolder / "flower_photos", formats=formats
         )
         paths = [*paths_]
-        random.shuffle([paths])
+        random.shuffle(paths)
         trainidx = int(len(paths) * self._settings.trainfrac)
         train = paths[:trainidx]
         valid = paths[trainidx:]
