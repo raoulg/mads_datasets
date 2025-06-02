@@ -1,8 +1,6 @@
-import re
-import string
 from enum import Enum
 from pathlib import Path
-from typing import Callable, List, Optional, Tuple, cast
+from typing import List, Optional, Tuple, cast
 
 from pydantic import BaseModel, HttpUrl
 
@@ -64,7 +62,6 @@ class ImgDatasetSettings(DatasetSettings):
 class TextDatasetSettings(DatasetSettings):
     maxvocab: int
     maxtokens: int
-    clean_fn: Callable
 
 
 class WindowedDatasetSettings(DatasetSettings):
@@ -84,13 +81,14 @@ class SecureDatasetSettings(DatasetSettings):
 
 favoritasettings = DatasetSettings(
     dataset_url=cast(
-        HttpUrl, "https://gitlab.com/api/v4/projects/50444079/repository/files/favorita%2Ezip/raw?lfs=true"
+        HttpUrl,
+        "https://gitlab.com/api/v4/projects/50444079/repository/files/favorita%2Ezip/raw?lfs=true",
     ),
     filename=Path("favorita.zip"),
     name="favorita",
     unzip=True,
     formats=[FileTypes.PARQ],
-    digest="284fa8134fce7d918d95ccd975c8f14d"
+    digest="284fa8134fce7d918d95ccd975c8f14d",
 )
 
 
@@ -151,21 +149,6 @@ gesturesdatasetsettings = DatasetSettings(
 )
 
 
-def clean(text: str) -> str:
-    punctuation = f"[{string.punctuation}]"
-    # remove CaPiTaLs
-    lowercase = text.lower()
-    # change don't and isn't into dont and isnt
-    neg = re.sub("\\'", "", lowercase)
-    # swap html tags for spaces
-    html = re.sub("<br />", " ", neg)
-    # swap punctuation for spaces
-    stripped = re.sub(punctuation, " ", html)
-    # remove extra spaces
-    spaces = re.sub("  +", " ", stripped)
-    return spaces
-
-
 imdbdatasetsettings = TextDatasetSettings(
     dataset_url=cast(
         HttpUrl, "https://ai.stanford.edu/~amaas/data/sentiment/aclImdb_v1.tar.gz"
@@ -176,7 +159,6 @@ imdbdatasetsettings = TextDatasetSettings(
     formats=[FileTypes.TXT],
     maxvocab=10000,
     maxtokens=100,
-    clean_fn=clean,
     digest="7c2ac02c03563afcf9b574c7e56c153a",
 )
 
