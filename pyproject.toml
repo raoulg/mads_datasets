@@ -1,14 +1,14 @@
 [project]
 name = "mads-datasets"
-version = "0.3.11"
+version = "0.3.14"
 description = "Datasets for the master applied data science"
 authors = [
     {name = "Raoul Grouls", email = "Raoul.Grouls@han.nl"},
 ]
 
 dependencies = [
-    "tqdm>=4.65.0",
-    "requests>=2.31.0",
+    "tqdm>=4.0.0",
+    "requests>=2.0.0",
     "loguru>=0.7.2",
     "numpy>=1.24.4",
     "pydantic>=1.10.8",
@@ -17,19 +17,16 @@ dependencies = [
     "keyring>=24.2.0",
     "polars>=1.5.0",
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.11"
 readme = "README.md"
 license = {text = "MIT"}
 
-[tool.pdm.dev-dependencies]
-lint = [
+[tool.rye]
+managed = true
+dev-dependencies = [
     "ruff>=0.0.277",
     "black>=23.3.0",
-    "mypy>=1.4.1",
     "isort>=5.12.0",
-    "types-requests>=2.31.0.1",
-]
-tests = [
     "pytest>=7.4.0",
     "jupyter>=1.0.0",
     "responses>=0.23.1",
@@ -51,9 +48,12 @@ filterwarnings = [
     "ignore::DeprecationWarning:jupyter_client.*:",
 ]
 
-[tool.pdm.build]
-includes = ["mads_datasets"]
-
 [build-system]
-requires = ["pdm-backend"]
-build-backend = "pdm.backend"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["mads_datasets"]

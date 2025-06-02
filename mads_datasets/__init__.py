@@ -1,4 +1,5 @@
 from pathlib import Path
+
 from loguru import logger
 
 from mads_datasets.base import AbstractDatasetFactory
@@ -15,6 +16,7 @@ from mads_datasets.factories import (
 )
 from mads_datasets.settings import (
     DatasetType,
+    SecureDatasetSettings,
     fashionmnistsettings,
     favoritasettings,
     flowersdatasetsettings,
@@ -23,12 +25,11 @@ from mads_datasets.settings import (
     irissettings,
     penguinssettings,
     sunspotsettings,
-    SecureDatasetSettings,
 )
 
 __all__ = ["DatasetFactoryProvider", "DatasetType"]
 
-__version__ = "0.3.11"
+__version__ = "0.3.14"
 
 
 class DatasetFactoryProvider:
