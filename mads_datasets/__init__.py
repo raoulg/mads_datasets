@@ -1,3 +1,4 @@
+import importlib.metadata
 from pathlib import Path
 
 from loguru import logger
@@ -29,7 +30,10 @@ from mads_datasets.settings import (
 
 __all__ = ["DatasetFactoryProvider", "DatasetType"]
 
-__version__ = "0.3.14"
+try:
+    __version__ = importlib.metadata.version("surf-controller")
+except importlib.metadata.PackageNotFoundError:
+    __version__ = "unknown"
 
 
 class DatasetFactoryProvider:
