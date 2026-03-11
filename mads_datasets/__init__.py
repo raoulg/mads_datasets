@@ -31,7 +31,7 @@ from mads_datasets.settings import (
 __all__ = ["DatasetFactoryProvider", "DatasetType"]
 
 try:
-    __version__ = importlib.metadata.version("surf-controller")
+    __version__ = importlib.metadata.version("mads-datasets")
 except importlib.metadata.PackageNotFoundError:
     __version__ = "unknown"
 
