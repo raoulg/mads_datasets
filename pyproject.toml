@@ -21,9 +21,8 @@ requires-python = ">=3.11"
 readme = "README.md"
 license = {text = "MIT"}
 
-[tool.rye]
-managed = true
-dev-dependencies = [
+[dependency-groups]
+dev = [
     "ruff>=0.0.277",
     "black>=23.3.0",
     "isort>=5.12.0",
